@@ -1,0 +1,60 @@
+<div class="select" [class.is-danger]="showError">
+    <select
+      *ngIf="to.multiple; else singleSelect"
+      multiple
+      [class.custom-select]="to.customSelect"
+      [formControl]="formControl"
+      [formlyAttributes]="field"
+    >
+    <ng-container *ngIf="to.options | formlySelectOptions:field | async as opts">
+      <ng-container *ngIf="to._flatOptions else grouplist">
+        <ng-container *ngFor="let opt of opts">
+          <option [ngValue]="opt.value" [disabled]="opt.disabled">{{ opt.label }}</option>
+        </ng-container>
+      </ng-container>
+      <ng-template #grouplist>
+        <ng-container *ngFor="let opt of opts">
+          <option *ngIf="!opt.group else optgroup" [ngValue]="opt.value" [disabled]="opt.disabled">{{ opt.label }}</option>
+          <ng-template #optgroup>
+            <optgroup [label]="opt.label">
+              <option *ngFor="let child of opt.group" [ngValue]="child.value" [disabled]="child.disabled">
+                {{ child.label }}
+              </option>
+            </optgroup>
+          </ng-template>
+        </ng-container>
+      </ng-template>
+    </ng-container>
+  </select>
+  <ng-template #singleSelect>
+    <select
+      [formControl]="formControl"
+      [class.custom-select]="to.customSelect"
+      [formlyAttributes]="field">
+      <pre>
+        {{ to.options }}
+      </pre>
+      <option *ngIf="to.placeholder" [ngValue]="null">{{ to.placeholder }}</option>
+      <ng-container *ngIf="to.options | formlySelectOptions:field | async as opts">
+        <ng-container *ngIf="to._flatOptions else grouplist">
+          <ng-container *ngFor="let opt of opts">
+            <option [ngValue]="opt.value" [disabled]="opt.disabled">{{ opt.label }}</option>
+          </ng-container>
+        </ng-container>
+        <ng-template #grouplist>
+          <ng-container *ngFor="let opt of opts">
+            <option *ngIf="!opt.group else optgroup" [ngValue]="opt.value" [disabled]="opt.disabled">{{ opt.label }}</option>
+            <ng-template #optgroup>
+              <optgroup [label]="opt.label">
+                <option *ngFor="let child of opt.group" [ngValue]="child.value" [disabled]="child.disabled">
+                  {{ child.label }}
+                </option>
+              </optgroup>
+            </ng-template>
+          </ng-container>
+        </ng-template>
+      </ng-container>
+    </select>
+  </ng-template>
+</div>
+
